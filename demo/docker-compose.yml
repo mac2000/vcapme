@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  nginx:
+    image: jwilder/nginx-proxy:alpine
+    ports:
+      - 443:443
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ../certs:/etc/nginx/certs
+
+  whoami:
+    image: jwilder/whoami
+    environment:
+      - VIRTUAL_HOST=whoami.vcap.me
+
+  backend:
+    build: ./backend
+    command: nodemon index.js
+    volumes:
+      - ./backend:/app
+      - /app/node_modules/
+    environment:
+      - VIRTUAL_HOST=backend.vcap.me
+      - VIRTUAL_PORT=3000
+
+  frontend:
+    image: nginx:alpine
+    volumes:
+      - ./frontend:/usr/share/nginx/html
+    environment:
+      - VIRTUAL_HOST=frontend.vcap.me
