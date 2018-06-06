@@ -1,6 +1,7 @@
 version: '3'
 
 services:
+  # Use this if you wish to generate certificates by your own
   nginx:
     image: jwilder/nginx-proxy:alpine
     ports:
@@ -8,6 +9,14 @@ services:
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - ../certs:/etc/nginx/certs
+  
+  # Use this if you wish everything to work out of the box
+  # nginx:
+  #   image: mac2000/nginx-proxy:alpine
+  #   ports:
+  #     - 443:443
+  #   volumes:
+  #     - /var/run/docker.sock:/tmp/docker.sock:ro
 
   whoami:
     image: jwilder/whoami
